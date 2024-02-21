@@ -1,0 +1,19 @@
+## Getting Started
+
+First, install all packages for Server:
+```bash
+pip install -r requirements.txt
+```
+Next, run the development server:
+Server
+```bash
+cd testpython/
+
+python3 streamlit run app.py
+```
+Overview:
+The following code allows the reading of a PDF file and facilitates the obtaining of information of the same one, by means of the accomplishment of questions through a chat (Chatgpt).
+using the lanchaing tool, which facilitates the processing and interpretation of documents, to perform the corresponding function.
+
+Note file:
+.env  - OPENAI_API_KEY=""
