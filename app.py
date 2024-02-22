@@ -13,11 +13,12 @@ import logging
 import os
 
 from PyPDF2 import PdfReader
+from langchain.chains import LLMChain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings 
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
-from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts.chat import ChatPromptTemplate
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -72,7 +73,6 @@ def create_embeddings(file=file):
         logging.info("you get the embedding of the created chunks")
         return knowledge_base
 
-        
 
 #The user is prompted for the question, 
 #all defined variables are passed to the 
@@ -84,6 +84,12 @@ try:
         logging.info("the existence of the file is validated in order to call the function")
         user_question = st.text_input("Ask a question about your PDF:")
         logging.info("question component")
+        role_strings = [
+            ("system", "you response with rhymes or poem, and you can answer in Spanish"), 
+            ("assistant", "defines culture?" ),
+        ]
+        prompt = ChatPromptTemplate.from_role_strings(role_strings)
+        logging.info("promtpt are generated")
 
 
         if user_question:
@@ -94,7 +100,7 @@ try:
             logging.info("you get the 3 embedding similar to the question")
             llm = ChatOpenAI(model='gpt-3.5-turbo')
             logging.info("load model OpenAI")
-            chain = load_qa_chain(llm, chain_type="stuff")
+            chain = LLMChain(llm=llm, prompt=prompt)
             logging.info("load type chain")
             reponse = chain.run(input_documents=docs, question=user_question)
             logging.info("the chain is executed with the models, embedding and the question")
